@@ -60,4 +60,27 @@ const createUser = async (req, res) => {
     });
   }
 };
-module.exports = { getAllUser, getSingleUser, createUser };
+
+const updateUser = async (req, res) => {
+  try {
+    const { _id } = req.params;
+    const { name, email } = req.body;
+    const updateUser = await userModel.findById({ _id });
+    updateUser.name = name || updateUser.name;
+    updateUser.email = email || updateUser.email;
+    const updatedUser = updateUser.save();
+    res.status(200).send({
+      success: true,
+      message: "Record has been updated",
+      updateUser,
+    });
+  } catch (error) {
+    res.status(400).send({
+      success: false,
+      message: "fail to update user",
+      error: error.message,
+    });
+  }
+};
+
+module.exports = { getAllUser, getSingleUser, createUser, updateUser };
